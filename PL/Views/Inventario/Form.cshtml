@@ -1,0 +1,66 @@
+﻿@model ML.ArticuloAlmacen
+
+@{
+    ViewData["Title"] = Model.IdArticuloAlmacen > 0 ? "Editar Artículo en Almacén" : "Agregar Artículo en Almacén";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">@ViewData["Title"]</h3>
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm("Form", "Inventario", FormMethod.Post, new { @class = "form-horizontal" }))
+            {
+                @Html.HiddenFor(model => model.IdArticuloAlmacen)
+
+                <div class="form-group row mb-3">
+                    <label for="ArticuloDropdown" class="col-sm-2 col-form-label">Artículo:</label>
+                    <div class="col-sm-10">
+                        @if(Model.Almacen.IdAlmacen==0)
+                        {
+                            @Html.DropDownListFor(model => model.Articulo.IdArticulo,
+                    new SelectList(Model.Articulo.Articulos, "IdArticulo", "Nombre", Model.Articulo.IdArticulo),
+                    "Selecciona un artículo",
+                    new { @class = "form-control", @id = "ArticuloDropdown" })
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(model => model.Articulo.IdArticulo,
+                    new SelectList(Model.Articulo.Articulos, "IdArticulo", "Nombre", Model.Articulo.IdArticulo),
+                    "Selecciona un artículo",
+                    new { @class = "form-control", @id = "ArticuloDropdown",@disabled="disabled" })
+                        }
+
+                    @Html.HiddenFor(model=> model.Articulo.IdArticulo)
+                    </div>
+                </div>
+
+                <div class="form-group row mb-3">
+                    <label for="AlmacenDropdown" class="col-sm-2 col-form-label">Almacén:</label>
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(model => model.Almacen.IdAlmacen,
+                    new SelectList(Model.Almacen.Almacenes, "IdAlmacen", "Descripcion", Model.Almacen.IdAlmacen),
+                    "Selecciona un almacén",
+                    new { @class = "form-control", @id = "AlmacenDropdown" })
+                    </div>
+                </div>
+
+                <div class="form-group row mb-3">
+                    <label for="Stock" class="col-sm-2 col-form-label">Cantidad de Stock:</label>
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(model => model.Stock, new { @class = "form-control", @type = "number", @min = "0", @id = "Stock" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-sm-10 offset-sm-2">
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                        <a href="@Url.Action("GetAll", "Inventario", new { })" class="btn btn-danger btn-block">Cancelar</a>                       
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

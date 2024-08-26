@@ -1,0 +1,54 @@
+﻿@model ML.ArticuloAlmacen
+
+@{
+    ViewData["Title"] = "Sumar Stock";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    // Recuperar la información de la sesión
+    var productoNombre = Context.Session.GetString("ProductoNombre");
+    var productoDescripcion = Context.Session.GetString("ProductoDescripcion");
+    var productoStock = Context.Session.GetInt32("ProductoStock");
+    var productoImagen = Context.Session.GetString("ProductoImagen");
+}
+
+<h2 class="text-center">@ViewData["Title"]</h2>
+
+<div class="container col-4 text-center">
+    <div class="card mb-3">
+        <div class="card-header">
+            Información del Producto
+        </div>
+        <div class="card-body">
+            <!-- Mostrar la imagen del producto si existe -->
+            @if (!string.IsNullOrEmpty(productoImagen))
+            {
+                <img src="data:image/jpeg;base64,@productoImagen" alt="Imagen del producto" class="img-fluid mb-3" style="max-width: 200px;" />
+            }
+            else
+            {
+                <p class="text-muted">No hay imagen disponible para este producto.</p>
+            }
+
+            <h5 class="card-title">@productoNombre</h5>
+            <p class="card-text">@productoDescripcion</p>
+            <p class="card-text"><strong>Stock Actual:</strong> @productoStock</p>
+        </div>
+    </div>
+
+    @using (Html.BeginForm("SumarStock", "Inventario", FormMethod.Post))
+    {
+        @Html.HiddenFor(model => model.IdArticuloAlmacen)
+
+        <div class="form-group">
+            <label for="CantidadSumar">Cantidad a Sumar:</label>
+            <input type="number" class="form-control" id="CantidadSumar" name="CantidadSumar" value="0" min="0" />
+        </div>
+        <br />
+        <hr />
+
+        <button type="submit" class="btn btn-success">Agregar Stock</button>
+        <a href="@Url.Action("GetAll", "Inventario", new { })" class="btn btn-danger btn-block">Cancelar</a>
+
+        
+    }
+</div>
